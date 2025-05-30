@@ -11,7 +11,7 @@ RUN pip3 install --upgrade pip && \
 
 # Create user
 RUN useradd -m -s /bin/bash termuser && \
-    echo 'termuser:yourpassword' | chpasswd
+    echo 'termuser:tanji' | chpasswd
 
 EXPOSE 8080
 CMD ["ttyd", "-p", "8080", "bash"]
