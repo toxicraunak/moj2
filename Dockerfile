@@ -1,17 +1,17 @@
 FROM ubuntu:22.04
 
-# Install dependencies in separate RUN commands (better caching)
+# 1. Install system dependencies first
 RUN apt-get update && apt-get install -y \
     wget curl git nano htop tmux python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ttyd separately (with retry)
-RUN pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir ttyd
+# 2. Install ttyd using BINARY (more reliable than pip)
+RUN wget https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -O /usr/local/bin/ttyd \
+    && chmod +x /usr/local/bin/ttyd
 
-# Create user
-RUN useradd -m -s /bin/bash termuser && \
-    echo 'termuser:tanji' | chpasswd
+# 3. Create user
+RUN useradd -m -s /bin/bash termuser \
+    && echo 'termuser:tanji' | chpasswd
 
 EXPOSE 8080
 CMD ["ttyd", "-p", "8080", "bash"]
